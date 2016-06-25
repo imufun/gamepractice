@@ -2,17 +2,29 @@ package game.imran.com.gamepractice;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class TDView extends SurfaceView implements Runnable {
-
+    PlayerShip player;
     volatile boolean playing;
     Thread gameThread = null;
 
+    //for drawing
+    private Paint mPaint;
+    private Canvas mCanvas;
+    private SurfaceHolder ourHolder;
+
     public TDView(Context context) {
         super(context);
+        ourHolder = getHolder();
+        mPaint = new Paint();
+        player = new PlayerShip(context);
+
     }
 
     public TDView(Context context, AttributeSet attrs) {
@@ -39,17 +51,17 @@ public class TDView extends SurfaceView implements Runnable {
 
     }
 
-    public void pause(){
-        playing =false;
+    public void pause() {
+        playing = false;
         try {
             gameThread.join();
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
 
         }
 
     }
 
-    public void resume(){
+    public void resume() {
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
@@ -59,6 +71,7 @@ public class TDView extends SurfaceView implements Runnable {
     }
 
     private void update() {
+        player.update();
     }
 
     private void draw() {
